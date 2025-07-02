@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./User.css";
@@ -37,7 +37,9 @@ const User = () => {
     }
 
     axios
-      .get(`http://localhost:5125/api/AdminSingleUserDetails/user-details/${phoneNumber}`)
+      .get(
+        `http://localhost:5125/api/AdminSingleUserDetails/user-details/${phoneNumber}`
+      )
       .then((res) => {
         setUser(res.data);
         setLoading(false);
@@ -78,9 +80,11 @@ const User = () => {
     return `${parseTime(timeFrom)} – ${parseTime(timeTo)}`;
   };
 
-  if (loading) return <div className="user-container">Loading user details...</div>;
+  if (loading)
+    return <div className="user-container">Loading user details...</div>;
   if (error) return <div className="user-container">{error}</div>;
-  if (!user) return <div className="user-container">No user data available.</div>;
+  if (!user)
+    return <div className="user-container">No user data available.</div>;
 
   return (
     <div className="user-container">
@@ -92,7 +96,9 @@ const User = () => {
         {/* div1 */}
         <div className="user-card div1">
           <div className="user-info-header">
-            <div className="user-avatar">{user.name.charAt(0).toUpperCase()}</div>
+            <div className="user-avatar">
+              {user.name.charAt(0).toUpperCase()}
+            </div>
             <h2 className="user-name">{user.name}</h2>
           </div>
           <div className="user-info-details">
@@ -123,7 +129,8 @@ const User = () => {
         {/* div3 - Upcoming Bookings */}
         <div className="user-card scrollable div3">
           <div className="card-header green-header">
-            Upcoming Booking <div className="badge">{user.upcomingBookings.length}</div>
+            Upcoming Booking{" "}
+            <div className="badge">{user.upcomingBookings.length}</div>
           </div>
           <div className="booking-scroll">
             {user.upcomingBookings.length > 0 ? (
@@ -134,9 +141,15 @@ const User = () => {
                 >
                   <div className="booking-left">
                     <div className="booking-date">{formatDate(item.date)}</div>
-                    <div className="booking-time">{formatTimeRange(item.timeFrom, item.timeTo)}</div>
+                    <div className="booking-time">
+                      {formatTimeRange(item.timeFrom, item.timeTo)}
+                    </div>
                   </div>
-                  <div className={`status-tag ${item.status?.toLowerCase() || "unknown"}`}>
+                  <div
+                    className={`status-tag ${
+                      item.status?.toLowerCase() || "unknown"
+                    }`}
+                  >
                     {item.status || "Booked"}
                   </div>
                 </div>
@@ -150,7 +163,8 @@ const User = () => {
         {/* div4 - Past Bookings */}
         <div className="user-card scrollable div4">
           <div className="card-header green-header">
-            Past Bookings <div className="badge">{user.pastBookings.length}</div>
+            Past Bookings{" "}
+            <div className="badge">{user.pastBookings.length}</div>
           </div>
           <div className="booking-scroll">
             {user.pastBookings.length > 0 ? (
@@ -161,9 +175,15 @@ const User = () => {
                 >
                   <div className="booking-left">
                     <div className="booking-date">{formatDate(item.date)}</div>
-                    <div className="booking-time">{formatTimeRange(item.timeFrom, item.timeTo)}</div>
+                    <div className="booking-time">
+                      {formatTimeRange(item.timeFrom, item.timeTo)}
+                    </div>
                   </div>
-                  <div className={`status-tag ${item.status?.toLowerCase() || "unknown"}`}>
+                  <div
+                    className={`status-tag ${
+                      item.status?.toLowerCase() || "unknown"
+                    }`}
+                  >
                     {item.status || "Completed"}
                   </div>
                 </div>

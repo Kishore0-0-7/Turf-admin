@@ -123,16 +123,16 @@ const Management = () => {
         );
 
         const updatedSlots: Slot[] = getAllSlots().map((slot) => {
-          const startTimeNormalized = slot.startTime!
-            .replace(/\s+/g, " ")
+          const startTimeNormalized = slot
+            .startTime!.replace(/\s+/g, " ")
             .trim()
             .toUpperCase();
           if (unavailableSet.has(startTimeNormalized)) {
-            return { ...slot, status: "disabled" };
+            return { ...slot, status: "disabled" as SlotStatus };
           } else if (maintenanceSet.has(startTimeNormalized)) {
-            return { ...slot, status: "maintenance" };
+            return { ...slot, status: "maintenance" as SlotStatus };
           } else {
-            return { ...slot, status: "available" };
+            return { ...slot, status: "available" as SlotStatus };
           }
         });
 
@@ -184,7 +184,9 @@ const Management = () => {
 
   const handleMarkAsMaintenance = () => {
     const updatedSlots = slots.map((slot, index) =>
-      selectedSlots.includes(index) ? { ...slot, status: "maintenance" } : slot
+      selectedSlots.includes(index)
+        ? { ...slot, status: "maintenance" as SlotStatus }
+        : slot
     );
     setSlots(updatedSlots);
     setSelectedSlots([]);
@@ -212,7 +214,7 @@ const Management = () => {
           &#x276F;
         </button>
       </div>
-      
+
       {/* Date calander */}
       <div className="calendar-nav weekdays-inside-nav">
         <button className="left-calendar" onClick={prevWeek}>
@@ -265,7 +267,9 @@ const Management = () => {
               selectedSlots.includes(index) ? "selected" : ""
             }`}
             onClick={() => handleSlotClick(index)}
-            ref={(el) => (slotRefs.current[index] = el)}
+            ref={(el) => {
+              slotRefs.current[index] = el;
+            }}
           >
             <div>{slot.time.split(" to ")[0]}</div>
             <div className="slot-to">to</div>
@@ -297,48 +301,52 @@ const Management = () => {
                 <button
                   className="remove-maintanance-button"
                   onClick={async () => {
-  if (!clickedDate || popupSlotIndex === null) return;
+                    if (!clickedDate || popupSlotIndex === null) return;
 
-  const year = clickedDate.getFullYear();
-  const month = String(clickedDate.getMonth() + 1).padStart(2, "0");
-  const day = String(clickedDate.getDate()).padStart(2, "0");
-  const formattedDate = `${year}-${month}-${day}`;
+                    const year = clickedDate.getFullYear();
+                    const month = String(clickedDate.getMonth() + 1).padStart(
+                      2,
+                      "0"
+                    );
+                    const day = String(clickedDate.getDate()).padStart(2, "0");
+                    const formattedDate = `${year}-${month}-${day}`;
 
-  const rawTime = slots[popupSlotIndex].startTime || "";
-  const timeSlot = formatToApiTime(rawTime);
+                    const rawTime = slots[popupSlotIndex].startTime || "";
+                    const timeSlot = formatToApiTime(rawTime);
 
-  try {
-    const response = await fetch(
-      "http://localhost:5125/api/AdminSlotManagement/delete-maintenance",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          date: formattedDate,
-          timeSlots: [timeSlot],
-        }),
-      }
-    );
+                    try {
+                      const response = await fetch(
+                        "http://localhost:5125/api/AdminSlotManagement/delete-maintenance",
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            date: formattedDate,
+                            timeSlots: [timeSlot],
+                          }),
+                        }
+                      );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete maintenance slot");
-    }
+                      if (!response.ok) {
+                        throw new Error("Failed to delete maintenance slot");
+                      }
 
-    // Refresh the slots after successful deletion
-    setSlots((prevSlots) =>
-      prevSlots.map((slot, idx) =>
-        idx === popupSlotIndex ? { ...slot, status: "available" } : slot
-      )
-    );
-    setPopupSlotIndex(null);
-  } catch (err) {
-    console.error("❌ Failed to delete maintenance:", err);
-    alert("Failed to remove maintenance. Try again.");
-  }
-}}
-
+                      // Refresh the slots after successful deletion
+                      setSlots((prevSlots) =>
+                        prevSlots.map((slot, idx) =>
+                          idx === popupSlotIndex
+                            ? { ...slot, status: "available" as SlotStatus }
+                            : slot
+                        )
+                      );
+                      setPopupSlotIndex(null);
+                    } catch (err) {
+                      console.error("❌ Failed to delete maintenance:", err);
+                      alert("Failed to remove maintenance. Try again.");
+                    }
+                  }}
                 >
                   Yes, Remove
                 </button>
@@ -371,7 +379,10 @@ const Management = () => {
                     if (!clickedDate) return;
 
                     const year = clickedDate.getFullYear();
-                    const month = String(clickedDate.getMonth() + 1).padStart(2, "0");
+                    const month = String(clickedDate.getMonth() + 1).padStart(
+                      2,
+                      "0"
+                    );
                     const day = String(clickedDate.getDate()).padStart(2, "0");
                     const formattedDate = `${year}-${month}-${day}`;
 

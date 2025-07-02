@@ -9,15 +9,8 @@ function Login() {
 
   function handleChange(e: HandleChangeEvent) {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   }
-
-  interface LoginFormData {
-    username: string;
-    password: string;
-  }
-
-  interface ChangeEventType extends React.ChangeEvent<HTMLInputElement> {}
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -55,7 +48,9 @@ function Login() {
             required
           />
           <div className="login-button-container">
-          <button type="submit" className="login-button">Login</button>
+            <button type="submit" className="login-button">
+              Login
+            </button>
           </div>
         </form>
       </div>

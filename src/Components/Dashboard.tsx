@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import {
   LineChart,
   Line,
@@ -7,10 +7,10 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
-} from 'recharts';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import './Dashboard.css';
+  ResponsiveContainer,
+} from "recharts";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import "./Dashboard.css";
 
 type BookingItem = {
   month: string;
@@ -24,22 +24,24 @@ function Dashboard() {
   const [upcoming, setUpcoming] = useState({ bookings: 0, hours: 0 });
   const [past, setPast] = useState({ bookings: 0, hours: 0 });
 
-  const [filter, setFilter] = useState<'Month' | 'Year'>('Year');
+  const [filter, setFilter] = useState<"Month" | "Year">("Year");
   const [currentDate, setCurrentDate] = useState(dayjs());
 
   // ✅ Total values from API
   const [totalBookings, setTotalBookings] = useState(0);
   const [totalHours, setTotalHours] = useState(0);
 
-  const isNextMonthDisabled = filter === 'Month' && currentDate.isSame(dayjs(), 'month');
-  const isNextYearDisabled = filter === 'Year' && currentDate.isSame(dayjs(), 'year');
+  const isNextMonthDisabled =
+    filter === "Month" && currentDate.isSame(dayjs(), "month");
+  const isNextYearDisabled =
+    filter === "Year" && currentDate.isSame(dayjs(), "year");
 
   useEffect(() => {
     const fetchGraphData = async () => {
       try {
-        let url = '';
+        let url = "";
 
-        if (filter === 'Year') {
+        if (filter === "Year") {
           const year = currentDate.year();
           url = `http://localhost:5125/api/AdminDashboard/year?year=${year}`;
         } else {
@@ -55,34 +57,37 @@ function Dashboard() {
         setTotalBookings(data.totalBookings || 0);
         setTotalHours(data.totalHours || 0);
 
-        const graphData = filter === 'Year'
-          ? data.data.map((item: any) => ({
-              month: item.label,
-              bookings: item.bookings,
-              color: item.color
-            }))
-          : data.data.map((item: any) => ({
-              month: `Day ${item.day}`,
-              bookings: item.bookings,
-              color: '#007bff'
-            }));
+        const graphData =
+          filter === "Year"
+            ? data.data.map((item: any) => ({
+                month: item.label,
+                bookings: item.bookings,
+                color: item.color,
+              }))
+            : data.data.map((item: any) => ({
+                month: `Day ${item.day}`,
+                bookings: item.bookings,
+                color: "#007bff",
+              }));
 
         setBookingData(graphData);
       } catch (error) {
-        console.error('Error fetching graph data:', error);
+        console.error("Error fetching graph data:", error);
       }
     };
 
     const fetchSummaryData = async () => {
       try {
-        const res = await fetch('http://localhost:5125/api/AdminDashboard/summary');
+        const res = await fetch(
+          "http://localhost:5125/api/AdminDashboard/summary"
+        );
         const data = await res.json();
 
         setToday({ bookings: data.today, hours: data.todayHours });
         setUpcoming({ bookings: data.upcoming, hours: data.upcomingHours });
         setPast({ bookings: data.past, hours: data.pastHours });
       } catch (error) {
-        console.error('Error fetching summary data:', error);
+        console.error("Error fetching summary data:", error);
       }
     };
 
@@ -99,36 +104,38 @@ function Dashboard() {
           <ChevronLeft
             className="nav-icon"
             onClick={() =>
-              setCurrentDate(prev =>
-                filter === 'Month' ? prev.subtract(1, 'month') : prev.subtract(1, 'year')
+              setCurrentDate((prev) =>
+                filter === "Month"
+                  ? prev.subtract(1, "month")
+                  : prev.subtract(1, "year")
               )
             }
           />
           <span className="date-display">
-            {filter === 'Month'
-              ? currentDate.format('MMM YYYY').toUpperCase()
-              : currentDate.format('YYYY')}
+            {filter === "Month"
+              ? currentDate.format("MMM YYYY").toUpperCase()
+              : currentDate.format("YYYY")}
           </span>
           <ChevronRight
             className="nav-icon"
             onClick={() => {
-              if (filter === 'Month' && !isNextMonthDisabled) {
-                setCurrentDate(prev => prev.add(1, 'month'));
-              } else if (filter === 'Year' && !isNextYearDisabled) {
-                setCurrentDate(prev => prev.add(1, 'year'));
+              if (filter === "Month" && !isNextMonthDisabled) {
+                setCurrentDate((prev) => prev.add(1, "month"));
+              } else if (filter === "Year" && !isNextYearDisabled) {
+                setCurrentDate((prev) => prev.add(1, "year"));
               }
             }}
             style={{
               opacity:
-                (filter === 'Month' && isNextMonthDisabled) ||
-                (filter === 'Year' && isNextYearDisabled)
+                (filter === "Month" && isNextMonthDisabled) ||
+                (filter === "Year" && isNextYearDisabled)
                   ? 0.3
                   : 1,
               pointerEvents:
-                (filter === 'Month' && isNextMonthDisabled) ||
-                (filter === 'Year' && isNextYearDisabled)
-                  ? 'none'
-                  : 'auto'
+                (filter === "Month" && isNextMonthDisabled) ||
+                (filter === "Year" && isNextYearDisabled)
+                  ? "none"
+                  : "auto",
             }}
           />
         </div>
@@ -137,7 +144,7 @@ function Dashboard() {
           <label>Filter By</label>
           <select
             value={filter}
-            onChange={e => setFilter(e.target.value as 'Month' | 'Year')}
+            onChange={(e) => setFilter(e.target.value as "Month" | "Year")}
             className="filter-select"
           >
             <option value="Month">Month</option>
@@ -160,8 +167,11 @@ function Dashboard() {
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip
-                contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc' }}
-                formatter={(value) => [`${value} bookings`, 'Bookings']}
+                contentStyle={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #ccc",
+                }}
+                formatter={(value) => [`${value} bookings`, "Bookings"]}
               />
               <Line
                 type="linear"
