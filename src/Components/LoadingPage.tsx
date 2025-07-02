@@ -1,6 +1,6 @@
 import React from "react";
 import "./LoadingPage.css";
-import football from "../Assets/football.png"; // ✅ Your football image
+import football from "../assets/football.png"; // ✅ Your football image
 
 const LoadingPage: React.FC = () => {
   return (

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 import "./Hedder.css";
-import EditIcon from "../assets/edit.svg";
+import EditIcon from "../assets/Edit.svg";
 import Login from "../assets/loginicon.svg";
 import logo from "../assets/logo.png";
 
